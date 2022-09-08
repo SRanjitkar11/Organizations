@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TestOrganization.Data;
 using TestOrganization.Models;
@@ -16,21 +13,39 @@ namespace TestOrganization.Controllers
     public class OrganizationsController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public OrganizationsController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IEmailSender _emailSender;
+        private readonly ILogger _logger;
+        public OrganizationsController(ApplicationDbContext context,
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            IEmailSender emailSender,
+            ILogger<AccountsController> logger)
         {
+            _signInManager = signInManager;
+            _userManager = userManager;
+            _emailSender = emailSender;
+            _logger = logger;
             _context = context;
         }
 
-        // GET: Organizations
         public async Task<IActionResult> Index()
         {
-              return _context.Organizations != null ? 
-                          View(await _context.Organizations.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Organizations'  is null.");
+            var adminCheck = _userManager.Users.Where(u => u.UserName == _userManager.GetUserName(User)).Select(x => x.IsAdmin).FirstOrDefault();
+            if (adminCheck == true)
+            {
+                return View(await _context.Organizations.ToListAsync());
+            }
+            else
+            {
+                var id = _userManager.Users.Where(u => u.UserName == _userManager.GetUserName(User)).Select(u => u.Id).FirstOrDefault();
+                var organizationList = _context.OrganizationUsers.Where(o => o.UserId == id).Select(x => x.OrganizationId).FirstOrDefault();
+                return View(await _context.Organizations.Where(x => x.Id == organizationList).ToListAsync());
+            }
+            
         }
 
-        // GET: Organizations/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null || _context.Organizations == null)
@@ -48,15 +63,11 @@ namespace TestOrganization.Controllers
             return View(organization);
         }
 
-        // GET: Organizations/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Organizations/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Code,Email")] OrganizationDTO organizationDTO)
@@ -77,7 +88,6 @@ namespace TestOrganization.Controllers
             return View();
         }
 
-        // GET: Organizations/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null || _context.Organizations == null)
@@ -93,9 +103,6 @@ namespace TestOrganization.Controllers
             return View(organization);
         }
 
-        // POST: Organizations/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Code,Email")] Organization organization)
@@ -128,7 +135,6 @@ namespace TestOrganization.Controllers
             return View(organization);
         }
 
-        // GET: Organizations/Delete/5
         public async Task<IActionResult> Delete(string? id)
         {
             if (id == null || _context.Organizations == null)
@@ -146,7 +152,6 @@ namespace TestOrganization.Controllers
             return View(organization);
         }
 
-        // POST: Organizations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)

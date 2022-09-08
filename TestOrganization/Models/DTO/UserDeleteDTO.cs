@@ -1,19 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace TestOrganization.Models.AccountViewModels
+﻿namespace TestOrganization.Models.DTO
 {
-    public class UserViewModel
+    public class UserDeleteDTO
     {
         public string Id { get; set; }
 
-        [Required]
-        [Display(Name = "User Name")]
         public string UserName { get; set; }
 
-        [Required]
-        [EmailAddress]
         public string Email { get; set; }
-
+        
         public string Role { get; set; }
 
         public string Organization { get; set; }

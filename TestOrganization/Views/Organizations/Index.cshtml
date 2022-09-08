@@ -42,7 +42,8 @@
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
             <td>
-                <a asp-controller="Users" asp-action="Create" asp-route-id ="@item.Id">Register New Account</a>
+                <a asp-controller="Accounts" asp-action="Register" asp-route-id ="@item.Id">Register New Account</a> |
+                <a asp-controller="Employees" asp-action="Index" asp-route-id ="@item.Id">List of Employee</a>
             </td>
         </tr>
 }

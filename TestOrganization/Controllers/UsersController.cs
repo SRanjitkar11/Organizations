@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +9,7 @@ using TestOrganization.Models.DTO;
 
 namespace TestOrganization.Controllers
 {
+    [Authorize]
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -20,22 +20,48 @@ namespace TestOrganization.Controllers
             _context = context;
             _userManager = userManager;
         }
-        // GET: UsersController
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var user = _userManager.Users.Where(x => x.IsAdmin == false).ToList();
-            List<UserViewModel> users = new List<UserViewModel>();
-            foreach (var item in user)
+            var userList = await _userManager.Users.Where(x => x.IsAdmin == false).ToListAsync();
+            ApplicationUser user = await _userManager.GetUserAsync(HttpContext.User);
+            if (user.IsAdmin == true)
             {
-                var role = _context.UserRoles.Where(x => x.UserId == item.Id.ToString()).Select(x => x.RoleId).FirstOrDefault();
-                var userRole = _context.Roles.Where(x => x.Id == role).Select(x => x.Name).FirstOrDefault();
-                users.Add(new UserViewModel { Id = item.Id, UserName = item.UserName, Email = item.Email, Role = userRole });
+                List<UserViewModel> users = new List<UserViewModel>();
+                foreach (var item in userList)
+                {
+                    var role = await _context.UserRoles.Where(x => x.UserId == item.Id.ToString()).Select(x => x.RoleId).FirstOrDefaultAsync();
+                    var userRole = await _context.Roles.Where(x => x.Id == role).Select(x => x.Name).FirstOrDefaultAsync();
+                    var oId = await _context.OrganizationUsers.Where(o => o.UserId == item.Id).Select(o => o.OrganizationId).FirstOrDefaultAsync();
+                    var organization = await _context.Organizations.Where(o => o.Id == oId).Select(o => o.Name).FirstOrDefaultAsync();
+                    users.Add(new UserViewModel { Id = item.Id, UserName = item.UserName, Email = item.Email, Role = userRole, Organization = organization });
+                }
+                return View(users);
             }
-            return View(users);
+            var rId = await _context.Roles.Where(x => x.Name == "Admin").Select(x => x.Id).FirstOrDefaultAsync();
+            var uId = await _context.UserRoles.Where(x => x.RoleId == rId).Select(x => x.UserId).ToListAsync();
+            var user1 = await _context.Users.Where(x => uId.Contains(x.Id)).ToListAsync();
+            if (uId.Contains(user.Id))
+            {
+                var org = await _context.OrganizationUsers.Where(x => x.UserId == user.Id).Select(x => x.OrganizationId).FirstOrDefaultAsync();
+                var orgUser = await _context.OrganizationUsers.Where(x => x.OrganizationId == org).Select(x => x.UserId).ToListAsync();
+                var orgUserList = await _userManager.Users.Where(x => orgUser.Contains(x.Id)).ToListAsync();
+                List<UserViewModel> users = new List<UserViewModel>();
+                foreach (var item in orgUserList)
+                {
+                    var role = await _context.UserRoles.Where(x => x.UserId == item.Id.ToString()).Select(x => x.RoleId).FirstOrDefaultAsync();
+                    var userRole = await _context.Roles.Where(x => x.Id == role).Select(x => x.Name).FirstOrDefaultAsync();
+                    var oId = await _context.OrganizationUsers.Where(o => o.UserId == item.Id).Select(o => o.OrganizationId).FirstOrDefaultAsync();
+                    var organization = await _context.Organizations.Where(o => o.Id == oId).Select(o => o.Name).FirstOrDefaultAsync();
+                    users.Add(new UserViewModel { Id = item.Id, UserName = item.UserName, Email = item.Email, Role = userRole, Organization = organization });
+                }
+                return View(users);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
-        // GET: UsersController/Details/5
-        [Authorize]
         public ActionResult AddToOrganization(string id)
         {
             if (id == null || _userManager.Users == null)
@@ -81,52 +107,134 @@ namespace TestOrganization.Controllers
             }
         }
 
-        // GET: UsersController/Create
         public ActionResult Create()
         {
             return RedirectToAction("Register", "Accounts");
         }
 
-        // GET: UsersController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(string id)
         {
-            return View();
+            if (id == null || _context.Users == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var userId = new UserEditDTO
+            {
+                Id = id
+            };
+            var roles = (from x in _context.Roles
+                         select x).ToList();
+            ViewBag.Role = roles;
+            return View(userId);
         }
 
-        // POST: UsersController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(string id, UserEditDTO model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                var orgUsers = await _context.UserRoles.Where(ou => ou.UserId == id).ToListAsync();
+
+                if (orgUsers.Any())
+                {
+                    _context.UserRoles.RemoveRange(orgUsers);
+                    _context.SaveChanges();
+                }
+
+                var user = new IdentityUserRole<string>()
+                {
+                    UserId = id,
+                    RoleId = model.Role
+                };
+
+                _context.UserRoles.Add(user);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
             }
-            catch
-            {
-                return View();
-            }
+            return View(model);
         }
 
-        // GET: UsersController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
-            return View();
+            if (id == null || _context.Users == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _context.Users
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var rId = await _context.UserRoles.Where(x => x.UserId == id).Select(x => x.RoleId).FirstOrDefaultAsync();
+            var role = await _context.Roles.Where(x => x.Id == rId).Select(x => x.Name).FirstOrDefaultAsync();
+            var oId = await _context.OrganizationUsers.Where(o => o.UserId == id).Select(o => o.OrganizationId).FirstOrDefaultAsync();
+            var organization = await _context.Organizations.Where(o => o.Id == oId).Select(o => o.Name).FirstOrDefaultAsync();
+            var userDetail = new UserDeleteDTO()
+            {
+                Id = id,
+                UserName = user.UserName,
+                Email = user.Email,
+                Role = role,
+                Organization = organization
+            };
+
+            return View(userDetail);
         }
 
-        // POST: UsersController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            try
+            if (_context.Users == null)
             {
-                return RedirectToAction(nameof(Index));
+                return Problem("Entity set 'ApplicationDbContext.Users'  is null.");
             }
-            catch
+            var user = await _context.Users.FindAsync(id);
+            if (user != null)
             {
-                return View();
+                _context.Users.Remove(user);
             }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Details()
+        {
+            ApplicationUser user = await _userManager.GetUserAsync(HttpContext.User);
+            string id = user.Id;
+            if (id == null || _context.Users == null)
+            {
+                return NotFound();
+            }
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var rId = await _context.UserRoles.Where(x => x.UserId == id).Select(x => x.RoleId).FirstOrDefaultAsync();
+            var role = await _context.Roles.Where(x => x.Id == rId).Select(x => x.Name).FirstOrDefaultAsync();
+            var oId = await _context.OrganizationUsers.Where(o => o.UserId == id).Select(o => o.OrganizationId).FirstOrDefaultAsync();
+            var organization = await _context.Organizations.Where(o => o.Id == oId).Select(o => o.Name).FirstOrDefaultAsync();
+            var userDetail = new UserDeleteDTO()
+            {
+                Id = id,
+                UserName = user.UserName,
+                Email = user.Email,
+                Role = role,
+                Organization = organization
+            };
+
+            return View(userDetail);
         }
     }
 }

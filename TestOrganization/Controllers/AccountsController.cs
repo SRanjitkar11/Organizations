@@ -31,18 +31,34 @@ namespace TestOrganization.Controllers
 
         [Authorize]
         [HttpGet]
-        public ActionResult Register()
+        public ActionResult Register(string id)
         {
+            var organization = _context.Organizations.Find(id);
+            var organ = new RegisterViewModel();
+            if (organization == null)
+            {
+                organ = new RegisterViewModel
+                {
+                    OrganizationId = string.Empty
+                };
+            }
+            else
+            {
+                organ = new RegisterViewModel
+                {
+                    OrganizationId = organization.Id
+                };
+            }
+
             var roles = (from x in _context.Roles
-                      select x).ToList();
-            ViewBag.RoleId = roles;
-            return View();
+                         select x).ToList();
+            ViewBag.Role = roles;
+            return View(organ);
         }
 
-        // POST: AccountsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        public async Task<IActionResult> Register(RegisterViewModel model, string? id)
         {
             if (ModelState.IsValid)
             {
@@ -60,24 +76,39 @@ namespace TestOrganization.Controllers
                     var userRole = new IdentityUserRole<string>()
                     {
                         UserId = applicationUser.Id,
-                        RoleId = model.RoleId
+                        RoleId = model.Role
                     };
                     _context.Add(userRole);
                     await _context.SaveChangesAsync();
-                    //await _signInManager.SignInAsync(applicationUser, isPersistent: false);
-                    _logger.LogInformation("User created a new account with password.");
-                    return RedirectToAction("Index", "Users");
+                    var orgUser = new OrganizationUser();
+                    if(id != null)
+                    {
+                        orgUser = new OrganizationUser
+                        {
+                            UserId = applicationUser.Id,
+                            OrganizationId = id
+                        };
+                        _context.OrganizationUsers.Add(orgUser);
+                        _context.SaveChanges();
+                        _logger.LogInformation("User created a new account with password.");
+                        return RedirectToAction("Index", "Organizations");
+                    }
+                    else
+                    {
+                        _logger.LogInformation("User created a new account with password.");
+                        return RedirectToAction("Index", "Users");
+                    }
+                    
                 }
                 AddErrors(result);
             }
-            return View();
+            return View(model);
         }
 
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Login()
         {
-            // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
             return View();
         }
@@ -89,9 +120,6 @@ namespace TestOrganization.Controllers
         {
             if (ModelState.IsValid)
             {
-                // This does not count login failures towards account lockout
-                // To enable password failures to trigger account lockout,
-                // set lockoutOnFailure: true
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 if (user == null)
                 {
@@ -113,11 +141,9 @@ namespace TestOrganization.Controllers
                     return View(model);
                 }
             }
-            // If execution got this far, something failed, redisplay the form.
             return View(model);
         }
 
-        // POST: AccountsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
@@ -140,7 +166,7 @@ namespace TestOrganization.Controllers
         public async Task<string> GetCurrentUserId()
         {
             ApplicationUser user = await _userManager.GetUserAsync(HttpContext.User);
-            return user.Id; // No need to cast here because user.Id is already a Guid, and not a string
+            return user.Id;
         }
         #endregion
 

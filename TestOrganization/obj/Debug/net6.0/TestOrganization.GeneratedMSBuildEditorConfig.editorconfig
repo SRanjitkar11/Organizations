@@ -27,12 +27,52 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudHNcUmVnaXN0ZXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/suneer.ranjitkar/OneDrive - Vesuvio Labs/Documents/Repos/TestOrganization/TestOrganization/Views/Employees/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVzXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/suneer.ranjitkar/OneDrive - Vesuvio Labs/Documents/Repos/TestOrganization/TestOrganization/Views/Employees/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVzXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/suneer.ranjitkar/OneDrive - Vesuvio Labs/Documents/Repos/TestOrganization/TestOrganization/Views/Employees/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVzXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/suneer.ranjitkar/OneDrive - Vesuvio Labs/Documents/Repos/TestOrganization/TestOrganization/Views/Employees/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVzXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/suneer.ranjitkar/OneDrive - Vesuvio Labs/Documents/Repos/TestOrganization/TestOrganization/Views/Employees/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/suneer.ranjitkar/OneDrive - Vesuvio Labs/Documents/Repos/TestOrganization/TestOrganization/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/suneer.ranjitkar/OneDrive - Vesuvio Labs/Documents/Repos/TestOrganization/TestOrganization/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/suneer.ranjitkar/OneDrive - Vesuvio Labs/Documents/Repos/TestOrganization/TestOrganization/Views/LeaveRequests/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGVhdmVSZXF1ZXN0c1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/suneer.ranjitkar/OneDrive - Vesuvio Labs/Documents/Repos/TestOrganization/TestOrganization/Views/LeaveRequests/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGVhdmVSZXF1ZXN0c1xEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/suneer.ranjitkar/OneDrive - Vesuvio Labs/Documents/Repos/TestOrganization/TestOrganization/Views/LeaveRequests/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGVhdmVSZXF1ZXN0c1xEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/suneer.ranjitkar/OneDrive - Vesuvio Labs/Documents/Repos/TestOrganization/TestOrganization/Views/LeaveRequests/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGVhdmVSZXF1ZXN0c1xFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/suneer.ranjitkar/OneDrive - Vesuvio Labs/Documents/Repos/TestOrganization/TestOrganization/Views/LeaveRequests/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGVhdmVSZXF1ZXN0c1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/suneer.ranjitkar/OneDrive - Vesuvio Labs/Documents/Repos/TestOrganization/TestOrganization/Views/Organizations/Create.cshtml]
@@ -69,6 +109,18 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/suneer.ranjitkar/OneDrive - Vesuvio Labs/Documents/Repos/TestOrganization/TestOrganization/Views/Users/AddToOrganization.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcQWRkVG9Pcmdhbml6YXRpb24uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/suneer.ranjitkar/OneDrive - Vesuvio Labs/Documents/Repos/TestOrganization/TestOrganization/Views/Users/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/suneer.ranjitkar/OneDrive - Vesuvio Labs/Documents/Repos/TestOrganization/TestOrganization/Views/Users/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/suneer.ranjitkar/OneDrive - Vesuvio Labs/Documents/Repos/TestOrganization/TestOrganization/Views/Users/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/suneer.ranjitkar/OneDrive - Vesuvio Labs/Documents/Repos/TestOrganization/TestOrganization/Views/Users/Index.cshtml]

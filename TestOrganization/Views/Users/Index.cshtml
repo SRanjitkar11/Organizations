@@ -21,6 +21,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Role)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Organization)
+            </th>
             <th>Action</th>
         </tr>
     </thead>
@@ -35,6 +38,13 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Role)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Organization)
+            </td>
+            <td>
+                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
             <td>
                 <a asp-action="AddToOrganization" asp-route-id="@item.Id">Add To Organization</a>

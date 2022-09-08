@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TestOrganization.Models.AccountViewModels
 {
     public class RegisterViewModel
     {
+        public string? OrganizationId { get; set; }
+
         [Required]
         [Display(Name = "User Name")]
         public string UserName { get; set; }
@@ -22,6 +23,6 @@ namespace TestOrganization.Models.AccountViewModels
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string? ConfirmPassword { get; set; }
 
-        public string RoleId { get; set; }
+        public string Role { get; set; }
     }
 }

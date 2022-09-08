@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TestOrganization.Data;
 
@@ -11,9 +12,10 @@ using TestOrganization.Data;
 namespace TestOrganization.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220905080910_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,15 +53,15 @@ namespace TestOrganization.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "9fd1ca63-88c2-4e48-bd71-6d9fd01c61f7",
-                            ConcurrencyStamp = "7cd82bc2-2f1c-4648-a3bd-3b9bcd584049",
+                            Id = "cf1d44f1-afdf-475e-ae95-ab5e228f2be4",
+                            ConcurrencyStamp = "5e497bd5-d2e9-442d-9e4a-f0fcd2687f5e",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "08080318-ae16-4098-8390-1d374321befa",
-                            ConcurrencyStamp = "39546796-9bb4-4a25-9c06-e4bf98987e03",
+                            Id = "d35088bd-21d5-4bba-a719-53e00d9803f9",
+                            ConcurrencyStamp = "f3dac464-2129-42e9-9d0d-1d0bf7e702d8",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -250,18 +252,18 @@ namespace TestOrganization.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "838bc12f-a63c-4690-a653-c056fd685575",
+                            Id = "c49d225f-4da1-4580-962a-4f8c785f5995",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "49c7767c-def5-477a-92c8-28b2dc5c19b1",
+                            ConcurrencyStamp = "769feaa5-4f0c-4540-bdc3-77f925f7fa49",
                             Email = "superadmin@gmail.com",
                             EmailConfirmed = false,
                             IsAdmin = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEKCMump2gqcmfjNgDs9op7PWQ5wB6f0K4m6sY1Cw1pvFbPYhSsYklwcNwkdW6VemZg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEM63sSJOeukhK5PENghzNXAT7Ity24IAlPI4M2iEXIIE3KuaUE/OESQXTCvrOURFlA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "cc2b15d3-b7b7-49bd-99b1-5e282e694cda",
+                            SecurityStamp = "f3a11996-e122-45ec-b019-8625cfd01276",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         });
@@ -287,19 +289,19 @@ namespace TestOrganization.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "4be2bdf1-05d1-439f-b6b9-1e40cd9526ab",
+                            Id = "d63b1b97-a2ef-41cd-888a-acc99c70d33f",
                             CallName = "PM",
                             Name = "Project Manager"
                         },
                         new
                         {
-                            Id = "f615e9dc-9ffc-4477-a1da-f1dbecd4773e",
+                            Id = "3bcf33ba-cbf0-4190-906b-8d44c53bec5d",
                             CallName = "TL",
                             Name = "Team Lead"
                         },
                         new
                         {
-                            Id = "3db25d33-b47f-49dc-8583-8a5a32c8d130",
+                            Id = "2492692f-3e16-4071-a151-b26b6bb77925",
                             CallName = "Developer",
                             Name = "Developer"
                         });
@@ -336,26 +338,6 @@ namespace TestOrganization.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Employees");
-                });
-
-            modelBuilder.Entity("TestOrganization.Models.LeaveRequest", b =>
-                {
-                    b.Property<string>("EmployeeId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("LeaveDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ReturnDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("EmployeeId");
-
-                    b.ToTable("LeaveRequests");
                 });
 
             modelBuilder.Entity("TestOrganization.Models.Organization", b =>
